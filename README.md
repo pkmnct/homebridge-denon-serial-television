@@ -1,7 +1,7 @@
 # Homebridge Denon Serial
 
 This Homebridge plugin enables control of (older) Denon AVR Receivers using a serial connection.
-It was tested with an AVR-3803
+It was tested with an AVR-3803.
 
 ## Compatibility
 
@@ -9,8 +9,8 @@ This should work with any Denon AVR that uses the following for serial control:
 
 - Power
     - Getting Power State: `PW?`
-    - Turning on: `POON`
-    - Turning off: `POSTANDBY`
+    - Turning on: `PWON`
+    - Turning off: `PWSTANDBY`
 - Input Control
     - Getting Input State: `SI?`
     - Switching Input: `SI<input>`
