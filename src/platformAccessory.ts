@@ -99,7 +99,8 @@ export class Television {
 
     this.tvSpeakerService
       .getCharacteristic(this.platform.Characteristic.Mute)
-      .on(CharacteristicEventTypes.SET, this.setMute.bind(this));
+      .on(CharacteristicEventTypes.SET, this.setMute.bind(this))
+      .on(CharacteristicEventTypes.GET, this.getMute.bind(this));
 
     this.tvSpeakerService
       .getCharacteristic(this.platform.Characteristic.VolumeSelector)
@@ -286,6 +287,30 @@ export class Television {
         }
       } else {
         const errorMessage = `While attempting to get input state, serial command returned '${data}'`;
+        this.platform.log.error(errorMessage);
+        callback(new Error(errorMessage), 0);
+      }
+    });
+  }
+
+  getMute(
+    callback: CharacteristicGetCallback,
+  ): void {
+    const command = 'MU?\r';
+
+    this.serial.send(command, (data: string | Error) => {
+      if (data instanceof Error) {
+        this.platform.log.error(data.toString());
+        callback(data, 0);
+      } else if (data.includes('MU')) {
+        this.platform.log.debug(`${command.trim()} received success: (${data})`);
+        const value = data.includes('MUON') ? true : false;
+
+        // the first argument of the callback should be null if there are no errors
+        callback(null, value);
+
+      } else {
+        const errorMessage = `While attempting to get mute state, the serial command returned '${data}'`;
         this.platform.log.error(errorMessage);
         callback(new Error(errorMessage), 0);
       }
